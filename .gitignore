@@ -14,3 +14,16 @@ buildNumber.properties
 # Intellij
 .idea/
 *.iml
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
