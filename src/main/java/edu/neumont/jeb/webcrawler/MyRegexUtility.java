@@ -29,8 +29,9 @@ public class MyRegexUtility {
 	}
 
 	public String[] getHTMLTagsContents(String html, String tagName) {
+		// group around the entire thing after including the space before and after tags? non greedy? first instancce??
 		String regex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">"; 
-		Pattern p = Pattern.compile(regex); 
+		Pattern p = Pattern.compile(regex, Pattern.MULTILINE); 
 		Matcher m = p.matcher(html);
 		ArrayList<String> list = new ArrayList<String>(); 
 		int count = 0; 
