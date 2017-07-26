@@ -18,7 +18,7 @@ public class MyRegexUtility {
 	}
 
 	public String getHTMLTagContents(String html, String tagName) {
-		String rawRegex = "<" + tagName + ">(.*?)<\\/" + tagName + ">"; 
+		String rawRegex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">"; 
 		Pattern p = Pattern.compile(rawRegex); 
 		Matcher m = p.matcher(html); 
 		if (m.find()) {
@@ -29,7 +29,7 @@ public class MyRegexUtility {
 	}
 
 	public String[] getHTMLTagsContents(String html, String tagName) {
-		String regex = "<" + tagName + ">(.*?)<\\/" + tagName + ">"; 
+		String regex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">"; 
 		Pattern p = Pattern.compile(regex); 
 		Matcher m = p.matcher(html);
 		ArrayList<String> list = new ArrayList<String>(); 
