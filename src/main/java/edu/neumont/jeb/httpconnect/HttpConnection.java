@@ -1,6 +1,6 @@
 package edu.neumont.jeb.httpconnect;
 
-import edu.neumont.jeb.parsing.RegexUtil;
+import edu.neumont.jeb.regex.RegexUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
