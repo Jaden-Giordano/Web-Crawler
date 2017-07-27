@@ -51,7 +51,7 @@ public class MyRegexUtility {
 	}
 
 	public String[] getHTMLLinkURL(String html) {
-		String regex = "<a href=\"(.*?)\">.*<\\/a>"; 
+		String regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
 		Pattern p = Pattern.compile(regex); 
 		Matcher m = p.matcher(html);
 		ArrayList<String> list = new ArrayList<String>(); 
