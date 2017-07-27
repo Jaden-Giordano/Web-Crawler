@@ -1,12 +1,12 @@
 package edu.neumont.jeb.webcrawler;
 
-import java.io.IOException;
+import edu.neumont.jeb.regex.RegexUtil;
 
 public class WebCrawler {
 
 	public static void main(String[] args) {
 		Parser p = new Parser(); 
-		MyRegexUtility r = new MyRegexUtility(); 
+		RegexUtil r = new RegexUtil();
 //			try {
 //				p.crawlURL("https://www.google.com/");
 //			} catch (IOException e) {
