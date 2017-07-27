@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 
 public class MyRegexUtility {
 
+	public boolean isValidUrl(String url) {
+		String regex = "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+";
+		return Pattern.matches(regex, url);
+	}
+
 	public int countContains(String needle, String haystack) {
 		int count = 0; 
 		String regex = needle;
