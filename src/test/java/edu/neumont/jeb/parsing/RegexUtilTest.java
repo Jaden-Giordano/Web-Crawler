@@ -1,4 +1,4 @@
-package edu.neumont.jeb.regex;
+package edu.neumont.jeb.parsing;
 
 import static org.junit.Assert.*;
 

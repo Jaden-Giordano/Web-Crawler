@@ -1,7 +1,7 @@
-package edu.neumont.jeb.webcrawler;
+package edu.neumont.jeb.parsing;
 
 import edu.neumont.jeb.httpconnect.HttpConnection;
-import edu.neumont.jeb.regex.RegexUtil;
+import edu.neumont.jeb.parsing.RegexUtil;
 
 public class Parser {
 	
