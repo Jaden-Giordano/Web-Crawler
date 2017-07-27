@@ -21,11 +21,7 @@ public class WebCrawler {
 	
 	private void crawlSite(String url) {
 		String source = HttpConnection.getInstance().getSource(url);
-		System.out.println("source.length() = " + source.length());
-		String[] sourceArry = source.split("<body>");
-		source = sourceArry[1];
-		sourceArry = source.split("</body>");
-		source = sourceArry[0];
+		source = source.split("<body>")[1].split("</body>")[0];
 
 		System.out.println("source = " + source);
 		

@@ -12,6 +12,10 @@ import java.net.URL;
 public class HttpConnection {
 	private static HttpConnection ourInstance = new HttpConnection();
 
+	/**
+	 * Returns the static instance created with the addition of this class
+	 * @return HttpConnection instance
+	 */
 	public static HttpConnection getInstance() {
 		return ourInstance;
 	}
@@ -19,6 +23,11 @@ public class HttpConnection {
 	private HttpConnection() {
 	}
 
+	/**
+	 * Get the html from the url
+	 * @param sUrl url as a string
+	 * @return String: source html
+	 */
 	public String getSource(String sUrl) {
 		String source = "";
 		URL url;

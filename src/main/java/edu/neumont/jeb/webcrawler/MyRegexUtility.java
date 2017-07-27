@@ -6,11 +6,21 @@ import java.util.regex.Pattern;
 
 public class MyRegexUtility {
 
+	/**
+	 * Checks to see if the passed in url is valid
+	 * @param url Website url
+	 * @return boolean: depending on whether or not it is valid
+	 */
 	public boolean isValidUrl(String url) {
 		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
 		return Pattern.matches(regex, url);
 	}
 
+	/**
+	 * Takes the passed in https(or http) url and returns the http version
+	 * @param url Website url
+	 * @return String: http url
+	 */
 	public String httpsToHttp(String url) {
 		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
 
@@ -22,6 +32,12 @@ public class MyRegexUtility {
 		return httpURL;
 	}
 
+	/**
+	 * Counts the number of times that the needle is in the haystack
+	 * @param needle What you are searching for
+	 * @param haystack What to search through
+	 * @return int: count
+	 */
 	public int countContains(String needle, String haystack) {
 		int count = 0; 
 		String regex = needle;
@@ -33,6 +49,12 @@ public class MyRegexUtility {
 		return count;
 	}
 
+	/**
+	 * Finds the contents of the first instance of the passed in tag
+	 * @param html html contents to search
+	 * @param tagName name of html tag
+	 * @return String: contents
+	 */
 	public String getHTMLTagContents(String html, String tagName) {
 		String rawRegex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">"; 
 		Pattern p = Pattern.compile(rawRegex); 
@@ -44,38 +66,47 @@ public class MyRegexUtility {
 		}
 	}
 
+	/**
+	 * Finds the contents of all instances of the passed in tag
+	 * @param html html contents to search
+	 * @param tagName name of html tag
+	 * @return String[]: contents
+	 */
 	public String[] getHTMLTagsContents(String html, String tagName) {
-		String regex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">"; 
+		String regex = "<" + tagName + ".*>(.*?)<\\/" + tagName + ">";
+
 		Pattern p = Pattern.compile(regex); 
 		Matcher m = p.matcher(html);
-		ArrayList<String> list = new ArrayList<String>(); 
-		int count = 0; 
+		ArrayList<String> list = new ArrayList<>();
+
 		while(m.find()){
 			list.add(m.group(1));
-			count++; 
 		}
-		String[] array = new String[count]; 
-		for (int i = 0; i < count; i++) {
-			array[i] = list.get(i); 
-		}
-		return array;
+
+		return list.toArray(new String[0]);
 	}
 
-	public String[] getHTMLLinkURL(String html) {
+	/**
+	 * Finds all a tag href values within the page that are not tel or mailto
+	 * @param html html contents to search
+	 * @param returnTelAndMailto boolean for whether or not you want to return tel and mailto a tag href values
+	 * @return String[]: links
+	 */
+	public String[] getHTMLLinkURL(String html, boolean returnTelAndMailto) {
 		String regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
+		if (returnTelAndMailto) {
+			regex = "<a href=\"([^\"]+)";
+		}
+
 		Pattern p = Pattern.compile(regex); 
 		Matcher m = p.matcher(html);
-		ArrayList<String> list = new ArrayList<String>(); 
-		int count = 0; 
+		ArrayList<String> list = new ArrayList<>();
+
 		while(m.find()){
 			list.add(m.group(1));
-			count++; 
 		}
-		String[] array = new String[count]; 
-		for (int i = 0; i < count; i++) {
-			array[i] = list.get(i); 
-		}
-		return array;
+
+		return list.toArray(new String[0]);
 	}
 
 }
