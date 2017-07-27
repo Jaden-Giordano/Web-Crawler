@@ -1,5 +1,7 @@
 package edu.neumont.jeb.webcrawler;
 
+import edu.neumont.jeb.httpconnect.HttpConnection;
+
 public class WebCrawler {
 
 	public static void main(String[] args) {
@@ -13,6 +15,21 @@ public class WebCrawler {
 				throw new IllegalArgumentException("Invalid Website URL");
 			}
 			System.out.println(i + ": " + args[i]);
+			crawlSite(args[i]);
 		}
 	}
+	
+	private void crawlSite(String url) {
+		String source = HttpConnection.getInstance().getSource(url);
+		System.out.println("source.length() = " + source.length());
+		String[] sourceArry = source.split("<body>");
+		source = sourceArry[1];
+		sourceArry = source.split("</body>");
+		source = sourceArry[0];
+
+		System.out.println("source = " + source);
+		
+	}
+	
+	
 }
