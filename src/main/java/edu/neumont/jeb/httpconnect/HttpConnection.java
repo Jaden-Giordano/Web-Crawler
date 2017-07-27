@@ -31,13 +31,14 @@ public class HttpConnection {
 	public String getSource(String sUrl) {
 		String source = "";
 		URL url;
+		HttpURLConnection con = null;
 
 		//Convert https to http
 		sUrl = new MyRegexUtility().httpsToHttp(sUrl);
 
 		try {
 			url = new URL(sUrl);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con = (HttpURLConnection) url.openConnection();
 
 			try (InputStream in = con.getInputStream()) {
 				try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
@@ -51,6 +52,10 @@ public class HttpConnection {
 			}
 		} catch (IOException e) {
 			return source;
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
 		}
 	}
 }
