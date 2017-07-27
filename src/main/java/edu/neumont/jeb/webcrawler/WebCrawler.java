@@ -25,10 +25,15 @@ public class WebCrawler {
 		if (source == null) {
 			return;
 		}
-
-		source = source.split("<body>")[1].split("</body>")[0];
-
-		System.out.println("source = " + source);
+		
+		RegexUtil r = new RegexUtil(); 
+		
+		String title = r.getHTMLTagContents(source, "title"); 
+		
+		String body = r.getHTMLTagContents(source, "body"); 
+		
+		String[] links = r.getHTMLLinkURL(body, false); 
+		
 		
 	}
 	

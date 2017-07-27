@@ -57,7 +57,7 @@ public class RegexUtil {
 	 * @return String: contents
 	 */
 	public String getHTMLTagContents(String html, String tagName) {
-		String rawRegex = "(<body(\\s[^>]*)?>)((\\s|.)*?)?(<\\/body>)";
+		String rawRegex = "(<" + tagName + "(\\s[^>]*)?>)((\\s|.)*?)?(<\\/" + tagName + ">)";
 		Pattern p = Pattern.compile(rawRegex, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(html);
 		if (m.find()) {
