@@ -1,5 +1,6 @@
 package edu.neumont.jeb.webcrawler;
 
+import edu.neumont.jeb.parsing.Parser;
 import org.junit.Test;
 
 public class WebCrawlerTests {

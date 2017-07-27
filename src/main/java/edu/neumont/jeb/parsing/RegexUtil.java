@@ -1,4 +1,4 @@
-package edu.neumont.jeb.regex;
+package edu.neumont.jeb.parsing;
 
 import java.util.ArrayList;
 import java.util.List;
