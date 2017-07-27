@@ -17,6 +17,13 @@ public class MyRegexUtilityTest {
 	}
 
 	@Test
+	public void TestHttpsToHttp() throws Exception {
+		MyRegexUtility r = new MyRegexUtility();
+		String expected = "http://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8";
+		assertEquals(expected, r.httpsToHttp("https://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8"));
+	}
+
+	@Test
 	public void validCountContains() throws Exception {
 		MyRegexUtility r = new MyRegexUtility();
 		assertEquals(6, r.countContains("i", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
