@@ -7,7 +7,8 @@ public class HttpConnectionTests {
 
 	@Test
 	public void testExistingDomain() {
-		Assert.assertFalse(HttpConnection.getInstance().getSource("http://google.com").isEmpty());
+		String page = HttpConnection.getInstance().getSource("http://www.neumont.edu");
+		Assert.assertFalse(page.isEmpty());
 	}
 
 	@Test
