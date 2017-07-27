@@ -1,6 +1,6 @@
 package edu.neumont.jeb.httpconnect;
 
-import edu.neumont.jeb.webcrawler.MyRegexUtility;
+import edu.neumont.jeb.regex.RegexUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class HttpConnection {
 		HttpURLConnection con = null;
 
 		//Convert https to http
-		sUrl = new MyRegexUtility().httpsToHttp(sUrl);
+		sUrl = new RegexUtil().httpsToHttp(sUrl);
 
 		try {
 			url = new URL(sUrl);
