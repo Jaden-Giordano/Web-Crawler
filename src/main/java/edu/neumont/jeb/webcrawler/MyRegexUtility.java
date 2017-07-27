@@ -7,8 +7,19 @@ import java.util.regex.Pattern;
 public class MyRegexUtility {
 
 	public boolean isValidUrl(String url) {
-		String regex = "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+";
+		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
 		return Pattern.matches(regex, url);
+	}
+
+	public String httpsToHttp(String url) {
+		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
+
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(url);
+		m.find();
+
+		String httpURL = "http://" + m.group(2);
+		return httpURL;
 	}
 
 	public int countContains(String needle, String haystack) {

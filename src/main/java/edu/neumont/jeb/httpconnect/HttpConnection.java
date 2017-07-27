@@ -1,5 +1,7 @@
 package edu.neumont.jeb.httpconnect;
 
+import edu.neumont.jeb.webcrawler.MyRegexUtility;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,9 @@ public class HttpConnection {
 	public String getSource(String sUrl) {
 		String source = "";
 		URL url;
+
+		//Convert https to http
+		sUrl = new MyRegexUtility().httpsToHttp(sUrl);
 
 		try {
 			url = new URL(sUrl);
