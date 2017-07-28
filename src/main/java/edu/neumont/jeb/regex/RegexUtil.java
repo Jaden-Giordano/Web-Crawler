@@ -18,9 +18,8 @@ public class RegexUtil {
 
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(url);
-		m.find();
 
-		if (m.group(0) == null) {
+		if (!m.find()) {
 			return null;
 		}
 

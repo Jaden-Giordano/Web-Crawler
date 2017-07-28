@@ -5,6 +5,49 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class RegexUtilTest {
+
+	@Test
+	public void localUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/news"));
+	}
+
+	@Test
+	public void localRelativeUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("news"));
+	}
+
+	@Test
+	public void localDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/text.pdf"));
+	}
+
+	@Test
+	public void localRelativeDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("text.pdf"));
+	}
+
+	@Test
+	public void localFolderedDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/docs/text.pdf"));
+	}
+
+	@Test
+	public void localFolderedRelativeDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("docs/text.pdf"));
+	}
+
 	@Test
 	public void shortUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
