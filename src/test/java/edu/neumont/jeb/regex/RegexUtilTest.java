@@ -6,22 +6,31 @@ import org.junit.Test;
 
 public class RegexUtilTest {
 	@Test
-	public void invalidUrl() throws Exception {
+	public void shortUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
-		assertFalse(r.isValidUrl("si0lewk9i3l"));
+		String expected = "http://neumont.edu";
+		assertEquals(expected, r.validateUrl("neumont.edu"));
 	}
 
 	@Test
-	public void validUrl() throws Exception {
+	public void fullHttpsUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
-		assertTrue(r.isValidUrl("https://google.com"));
+		String expected = "http://google.com";
+		assertEquals(expected, r.validateUrl("https://google.com"));
 	}
 
 	@Test
-	public void httpsToHttp() throws Exception {
+	public void subdomainUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = "http://mail.google.com";
+		assertEquals(expected, r.validateUrl("mail.google.com"));
+	}
+
+	@Test
+	public void queryUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
 		String expected = "http://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8";
-		assertEquals(expected, r.httpsToHttp("https://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8"));
+		assertEquals(expected, r.validateUrl("https://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8"));
 	}
 
 	@Test
