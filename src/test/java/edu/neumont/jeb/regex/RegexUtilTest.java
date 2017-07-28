@@ -54,17 +54,31 @@ public class RegexUtilTest {
 	}
 
 	@Test
-	public void validGetHTMLLinkURL() throws Exception {
+	public void validGetHTMLLinkURLNoAnchorsMailtoOrTel() throws Exception {
 		RegexUtil r = new RegexUtil();
-		String[] expected = new String[] {"#hero", "#news", "#servers", "#roster", "#about", "#contact"};
-		assertArrayEquals(expected, r.getHTMLLinkURL("<div id=\"sidecar_nav\"><div class=\"link_container\"><a href=\"#hero\">Home</a> <a href=\"#news\">News</a> <a href=\"#servers\">Servers</a> <a href=\"#roster\">Roster</a> <a href=\"#about\">About Us</a> <a href=\"#contact\">Contact</a></div></div><a href=\"mailto:test@mailinator.net\" title=\"test email address\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false));
+		String[] expected = new String[] {"/news", "https://servers.com", "http://roster.com"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false, false));
 	}
 
 	@Test
-	public void validGetHTMLLinkURLWithTelAndMailto() throws Exception {
+	public void validGetHTMLLinkURLWithAnchorsNoMailtoAndTel() throws Exception {
 		RegexUtil r = new RegexUtil();
-		String[] expected = new String[] {"#hero", "#news", "#servers", "#roster", "#about", "#contact", "mailto:test@mailinator.net", "tel:18886386668"};
-		assertArrayEquals(expected, r.getHTMLLinkURL("<div id=\"sidecar_nav\"><div class=\"link_container\"><a href=\"#hero\">Home</a> <a href=\"#news\">News</a> <a href=\"#servers\">Servers</a> <a href=\"#roster\">Roster</a> <a href=\"#about\">About Us</a> <a href=\"#contact\">Contact</a></div></div><a href=\"mailto:test@mailinator.net\" title=\"test email address\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true));
+		String[] expected = new String[] {"#hero", "/news", "https://servers.com", "http://roster.com"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true, false));
+	}
+
+	@Test
+	public void validGetHTMLLinkURLWithMailtoAndTelNoAnchors() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String[] expected = new String[] {"/news", "https://servers.com", "http://roster.com", "mailto:test@mailinator.net", "tel:18886386668"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false, true));
+	}
+
+	@Test
+	public void validGetHTMLLinkURLWithAnchorsMailtoAndTel() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String[] expected = new String[] {"#hero", "/news", "https://servers.com", "http://roster.com", "mailto:test@mailinator.net", "tel:18886386668"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true, true));
 	}
 
 }
