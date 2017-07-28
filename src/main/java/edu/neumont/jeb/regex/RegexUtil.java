@@ -87,10 +87,16 @@ public class RegexUtil {
 	 * @param returnTelAndMailto boolean for whether or not you want to return tel and mailto a tag href values
 	 * @return String[]: links
 	 */
-	public String[] getHTMLLinkURL(String html, boolean returnTelAndMailto) {
-		String regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
-		if (returnTelAndMailto) {
+	public String[] getHTMLLinkURL(String html, boolean returnAnchors,  boolean returnTelAndMailto) {
+		String regex;
+		if (returnAnchors && returnTelAndMailto) {
 			regex = "<a href=\"([^\"]+)";
+		} else if (returnAnchors && !returnTelAndMailto) {
+			regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
+		} else if (!returnAnchors && returnTelAndMailto){
+			regex = "<a href=\"((?!#)[^\"]+)";
+		} else {
+			regex = "<a href=\"((?!(tel|mailto|#))[^\"]+)";
 		}
 
 		Pattern p = Pattern.compile(regex);
