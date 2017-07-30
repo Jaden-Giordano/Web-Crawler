@@ -97,6 +97,10 @@ public class Database<T extends IStorable> {
 		return null;
 	}
 
+	public int size() {
+		return nextIndex / getRefInstance().sizeOf();
+	}
+
 	public void close() {
 		try {
 			file.close();
