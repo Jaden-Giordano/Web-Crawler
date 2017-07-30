@@ -33,9 +33,6 @@ public class HttpConnection {
 		URL url;
 		HttpURLConnection con = null;
 
-		//Convert https to http
-		sUrl = new RegexUtil().httpsToHttp(sUrl);
-
 		try {
 			url = new URL(sUrl);
 			con = (HttpURLConnection) url.openConnection();

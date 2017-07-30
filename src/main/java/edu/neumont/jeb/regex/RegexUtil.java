@@ -8,28 +8,23 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
 	/**
-	 * Checks to see if the passed in url is valid
+	 * Takes a passed in url and makes it valid for HTTP, or returns null if it is not a valid url.
 	 * @param url Website url
-	 * @return boolean: depending on whether or not it is valid
+	 * @return String: valid URL or null
 	 */
-	public boolean isValidUrl(String url) {
-		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
-		return Pattern.matches(regex, url);
-	}
-
-	/**
-	 * Takes the passed in https(or http) url and returns the http version
-	 * @param url Website url
-	 * @return String: http url
-	 */
-	public String httpsToHttp(String url) {
-		String regex = "^(?:http(s)?://)([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
+	public String validateUrl(String url) {
+		String regex = "^(?:http(s)?://)?([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
+		String httpURL = "http://";
 
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(url);
 		m.find();
 
-		String httpURL = "http://" + m.group(2);
+		if (m.group(0) == null) {
+			return null;
+		}
+
+		httpURL += m.group(2);
 		return httpURL;
 	}
 
@@ -92,10 +87,16 @@ public class RegexUtil {
 	 * @param returnTelAndMailto boolean for whether or not you want to return tel and mailto a tag href values
 	 * @return String[]: links
 	 */
-	public String[] getHTMLLinkURL(String html, boolean returnTelAndMailto) {
-		String regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
-		if (returnTelAndMailto) {
+	public String[] getHTMLLinkURL(String html, boolean returnAnchors,  boolean returnTelAndMailto) {
+		String regex;
+		if (returnAnchors && returnTelAndMailto) {
 			regex = "<a href=\"([^\"]+)";
+		} else if (returnAnchors && !returnTelAndMailto) {
+			regex = "<a href=\"((?!(tel|mailto))[^\"]+)";
+		} else if (!returnAnchors && returnTelAndMailto){
+			regex = "<a href=\"((?!#)[^\"]+)";
+		} else {
+			regex = "<a href=\"((?!(tel|mailto|#))[^\"]+)";
 		}
 
 		Pattern p = Pattern.compile(regex);

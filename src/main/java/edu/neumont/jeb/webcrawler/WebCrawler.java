@@ -12,7 +12,8 @@ public class WebCrawler {
 
 	private void run(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			if (! new RegexUtil().isValidUrl(args[i])) {
+			args[i] = new RegexUtil().validateUrl(args[i]);
+			if (args[i] == null) {
 				throw new IllegalArgumentException("Invalid Website URL");
 			}
 			System.out.println(i + ": " + args[i]);
