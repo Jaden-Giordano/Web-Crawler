@@ -33,9 +33,7 @@ public class WebCrawler {
 		
 		String body = r.getHTMLTagContents(source, "body"); 
 		
-		String[] links = r.getHTMLLinkURL(body, false); 
-		
-		
+		String[] links = r.getHTMLLinkURL(body, false, false);
 	}
 	
 	
