@@ -2,6 +2,7 @@ package edu.neumont.jeb.webcrawler;
 
 import edu.neumont.jeb.httpconnect.HttpConnection;
 import edu.neumont.jeb.parsing.ParseUtil;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,12 +89,13 @@ public class WebCrawler {
 		}
 		String[] optionContents = optionsList.toArray(new String[optionsList.size()]);
 
-		for (String i : divContents) {
+		for (String i : (String[]) ArrayUtils.addAll(divContents, pContents, spanContents, liContents, labelContents, aContents, tdContents, thContents, fontContents, alts, selectContents, optionContents)) {
 			String content = i;
-			if (isConjunction(i)) continue;
+			content = replacePunctuation(content);
 
 			String[] words = content.split(" ");
 			for (String j : words) {
+				if (isConjunction(i)) continue;
 				addWord(url, j);
 			}
 		}
