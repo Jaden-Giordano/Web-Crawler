@@ -124,5 +124,9 @@ public class WebCrawler {
 		return false;
 	}
 	
+	private String replacePunctuation(String word) {
+			return word.replaceAll("([[:punct:]])", "");
+	}
+	
 	
 }
