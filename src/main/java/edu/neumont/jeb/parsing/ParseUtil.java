@@ -1,11 +1,11 @@
-package edu.neumont.jeb.regex;
+package edu.neumont.jeb.parsing;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexUtil {
+public class ParseUtil {
 
 	/**
 	 * Takes a passed in url and makes it valid for HTTP, or returns null if it is not a valid url.
@@ -136,6 +136,45 @@ public class RegexUtil {
 		}
 
 		return list.toArray(new String[0]);
+	}
+
+	public String[] getTagContents(String html, String tag) {
+		List<String> contents = new ArrayList<>();
+
+		int start = html.indexOf("<" + tag + ">");
+		while (true) {
+			int next = html.indexOf("</" + tag + ">", start);
+			while (true) {
+				String pContent = html.substring(start, next);
+
+				int count = 0;
+				int countNextFrom = 1;
+				for (;;count++) {
+					int indexOf = pContent.indexOf("<" + tag + ">", countNextFrom);
+					if (indexOf >= 0) {
+						countNextFrom = indexOf + 1;
+						continue;
+					}
+					break;
+				}
+
+				for (int i = 0; i < count; i++) {
+					next = html.indexOf("</" + tag + ">", next + 1);
+				}
+
+				pContent = html.substring(start, next);
+				pContent = pContent.substring(("<" + tag + ">").length());
+				//pContent = pContent.replace("<" + tag + ">", "");
+
+				contents.add(pContent);
+				break;
+			}
+
+			start = html.indexOf("<" + tag + ">", start + 1);
+			if (start == -1) break;
+		}
+
+		return contents.toArray(new String[contents.size()]);
 	}
 
 }
