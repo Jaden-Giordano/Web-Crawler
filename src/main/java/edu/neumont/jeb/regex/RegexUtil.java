@@ -91,6 +91,25 @@ public class RegexUtil {
 	}
 
 	/**
+	 * Finds and returns all Text in an image's alt attribute
+	 * @param html html contents to search
+	 * @return String[]: Text from each alt attribute
+	 */
+	public String[] getAltText(String html) {
+		String regex = "alt=\"([^\"]+)";
+
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(html);
+		ArrayList<String> list = new ArrayList<>();
+
+		while(m.find()){
+			list.add(m.group(1));
+		}
+
+		return list.toArray(new String[0]);
+	}
+
+	/**
 	 * Finds all a tag href values within the page that are not tel or mailto
 	 * @param html html contents to search
 	 * @param returnTelAndMailto boolean for whether or not you want to return tel and mailto a tag href values
