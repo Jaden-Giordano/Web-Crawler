@@ -62,4 +62,9 @@ public class Word implements IStorable {
 	public int sizeOf() {
 		return 255 + 255 + 10;
 	}
+
+	@Override
+	public String getKey() {
+		return this.getWord(); 
+	}
 }
