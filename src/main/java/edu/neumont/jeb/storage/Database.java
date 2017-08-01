@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.neufree.contacts.person.Contact;
+
 public class Database<T extends IStorable> {
 
 	private RandomAccessFile file;
@@ -92,6 +94,19 @@ public class Database<T extends IStorable> {
 			wordIndex.put(c.getKey(), tempIndex); 
 		}
 		tempIndex.add(nextIndex);
+	}
+	
+	public List<T> searchWord(String word) { 
+		List<Integer> indecies = wordIndex.get(word); 
+		List<T> results = new ArrayList<>(); 
+		if (indecies == null) {
+			return new ArrayList<>(); 
+		}
+		for(Integer index: indecies) {
+			T c = this.get(index); 
+			results.add(c); 
+		}
+		return results; 
 	}
 
 	public T get(int index) {
