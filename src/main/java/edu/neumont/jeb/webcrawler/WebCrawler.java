@@ -15,8 +15,11 @@ public class WebCrawler {
 
 	List<String> readURLs;
 
+	List<Word> words;
+
 	private WebCrawler() {
 		this.readURLs = new ArrayList<>();
+		this.words = new ArrayList<>();
 	}
 
 	private void run(String[] args) {
@@ -32,6 +35,18 @@ public class WebCrawler {
 
 	private boolean alreadyRead(String url) {
 		return readURLs.contains(url);
+	}
+
+	private void addWord(String url, String word) {
+		for (Word i : words) {
+			if (i.getUrl().equals(url)) {
+				if (i.getWord().equalsIgnoreCase(word)) {
+					i.pushOccurances();
+					return;
+				}
+			}
+		}
+		words.add(new Word(url, word, 1));
 	}
 	
 	private void crawlSite(String url, int depth) {
