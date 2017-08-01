@@ -26,7 +26,7 @@ public class WebCrawler {
 				throw new IllegalArgumentException("Invalid Website URL");
 			}
 			System.out.println(i + ": " + args[i]);
-			crawlSite(args[i]);
+			crawlSite(args[i], 0);
 		}
 	}
 
