@@ -97,5 +97,9 @@ public class WebCrawler {
 		}
 	}
 	
+	private String replacePunctuation(String word) {
+			return word.replaceAll("([[:punct:]])", "");
+	}
+	
 	
 }
