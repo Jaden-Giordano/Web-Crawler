@@ -57,9 +57,9 @@ public class WebCrawler {
 			return;
 		}
 		
-		RegexUtil r = new RegexUtil(); 
+		RegexUtil r = new RegexUtil();
 		
-		String title = r.getHTMLTagContents(source, "title"); 
+		String title = r.getHTMLTagContents(source, "title");
 		
 		String body = r.getHTMLTagContents(source, "body");
 
