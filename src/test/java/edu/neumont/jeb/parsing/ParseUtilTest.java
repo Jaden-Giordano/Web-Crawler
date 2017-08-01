@@ -131,4 +131,14 @@ public class ParseUtilTest {
 		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true, true));
 	}
 
+	@Test
+	public void parseHTML() {
+		ParseUtil r = new ParseUtil();
+		String html = "<body><div><div>wow</div><p>hi_there</p></div></body>";
+		String[] expected = new String[] {"<div>wow</div><p>hi_there</p>", "wow"};
+		assertArrayEquals(expected, r.getTagContents(html, "div"));
+
+		assertTrue(r.getTagContents(html, "p")[0].equals("hi_there"));
+	}
+
 }
