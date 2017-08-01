@@ -11,9 +11,6 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.neufree.contacts.person.Contact;
 
 public class Database<T extends IStorable> {
 
