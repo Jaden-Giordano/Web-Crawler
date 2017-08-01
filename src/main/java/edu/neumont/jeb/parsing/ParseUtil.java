@@ -1,11 +1,11 @@
-package edu.neumont.jeb.regex;
+package edu.neumont.jeb.parsing;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexUtil {
+public class ParseUtil {
 
 	/**
 	 * Takes a passed in url and makes it valid for HTTP, or returns null if it is not a valid url.

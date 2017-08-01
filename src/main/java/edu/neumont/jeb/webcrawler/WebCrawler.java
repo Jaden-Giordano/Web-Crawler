@@ -1,7 +1,7 @@
 package edu.neumont.jeb.webcrawler;
 
 import edu.neumont.jeb.httpconnect.HttpConnection;
-import edu.neumont.jeb.regex.RegexUtil;
+import edu.neumont.jeb.parsing.ParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class WebCrawler {
 
 	private void run(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			args[i] = new RegexUtil().validateUrl(args[i]);
+			args[i] = new ParseUtil().validateUrl(args[i]);
 			if (args[i] == null) {
 				throw new IllegalArgumentException("Invalid Website URL");
 			}
@@ -57,7 +57,7 @@ public class WebCrawler {
 			return;
 		}
 		
-		RegexUtil r = new RegexUtil();
+		ParseUtil r = new ParseUtil();
 		
 		String title = r.getHTMLTagContents(source, "title");
 		
