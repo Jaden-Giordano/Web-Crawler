@@ -1,14 +1,24 @@
 package edu.neumont.jeb.storage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Database<T extends IStorable> {
 
 	private RandomAccessFile file;
 	private int nextIndex = 8;
-
+	private HashMap<String, List<Integer>> wordIndex = new HashMap<>(); 
+	private final String indexOfWordsPath = "./src/main/java/edu/neumont/jeb/storage/index.txt"; 
+	
 	private Class<T> ref;
 
 	public Database() {
@@ -24,14 +34,29 @@ public class Database<T extends IStorable> {
 			boolean readOffset = new File(dirs, "data").exists();
 
 			file = new RandomAccessFile(path + File.separator + "data", "rw");
-
 			if (readOffset) nextIndex = file.readInt();
-		} catch (IOException e) {
+			wordIndex = loadIndex(indexOfWordsPath); 
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void insert(T c) {
+	@SuppressWarnings("unchecked")
+	private HashMap<String, List<Integer>> loadIndex(String path) throws IOException, ClassNotFoundException {
+		HashMap<String, List<Integer>> loaded = new HashMap<>(); 
+		if (new File(path).exists()) {
+			try(FileInputStream in = new FileInputStream(path)) {
+				try(ObjectInputStream objIn = new ObjectInputStream(in)){
+					loaded = (HashMap<String, List<Integer>>) objIn.readObject();
+				}
+			}
+		}
+		return loaded;
+	}
+
+	public void insert(T c) { 
+		insertWordIndex(c);
+		writeIndex(wordIndex); 
 		try {
 			file.seek(nextIndex);
 			byte[] bytes = c.serialize().getBytes();
@@ -45,6 +70,40 @@ public class Database<T extends IStorable> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void writeIndex(HashMap<String, List<Integer>> index) {
+		try(FileOutputStream out = new FileOutputStream(indexOfWordsPath)) {
+			try(ObjectOutputStream objOut = new ObjectOutputStream(out)){
+				objOut.writeObject(index);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void insertWordIndex(T c) {
+		List<Integer> tempIndex = wordIndex.get(c.getKey());
+		if (tempIndex == null) {
+			tempIndex = new ArrayList<>();
+			wordIndex.put(c.getKey(), tempIndex); 
+		}
+		tempIndex.add(nextIndex);
+	}
+	
+	public List<T> searchWord(String word) { 
+		List<Integer> indecies = wordIndex.get(word); 
+		List<T> results = new ArrayList<>(); 
+		if (indecies == null) {
+			return new ArrayList<>(); 
+		}
+		for(Integer index: indecies) {
+			T c = this.get(index); 
+			results.add(c); 
+		}
+		return results; 
 	}
 
 	public T get(int index) {
