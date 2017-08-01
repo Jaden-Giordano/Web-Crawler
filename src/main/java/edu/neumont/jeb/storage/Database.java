@@ -1,13 +1,20 @@
 package edu.neumont.jeb.storage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Database<T extends IStorable> {
 
 	private RandomAccessFile file;
 	private int nextIndex = 8;
+	private Map<String, List<Integer>> wordIndex = new HashMap<>(); 
 
 	private Class<T> ref;
 
@@ -24,14 +31,28 @@ public class Database<T extends IStorable> {
 			boolean readOffset = new File(dirs, "data").exists();
 
 			file = new RandomAccessFile(path + File.separator + "data", "rw");
-
 			if (readOffset) nextIndex = file.readInt();
-		} catch (IOException e) {
+			wordIndex = loadIndex("./src/main/java/edu/neumont/jeb/storage/index.txt"); 
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private Map<String, List<Integer>> loadIndex(String path) throws IOException, ClassNotFoundException {
+		HashMap<String, List<Integer>> loaded = new HashMap<>(); 
+		if (new File(path).exists()) {
+			try(FileInputStream in = new FileInputStream(path)) {
+				try(ObjectInputStream objIn = new ObjectInputStream(in)){
+					loaded = (HashMap<String, List<Integer>>) objIn.readObject();
+				}
+			}
+		}
+		return loaded;
+	}
+
 	public void insert(T c) {
+		
 		try {
 			file.seek(nextIndex);
 			byte[] bytes = c.serialize().getBytes();
