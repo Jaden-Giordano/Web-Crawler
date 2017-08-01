@@ -136,6 +136,67 @@ public class WebCrawler {
 	private String replacePunctuation(String word) {
 			return word.replaceAll("([[:punct:]])", "");
 	}
-	
+
+
+	public static String getWordsInBase(String html) {
+		int level = 0;
+		String currentSpot;
+		boolean checkOpen = false;
+		boolean checkClose = false;
+		boolean inClosingTag = false;
+		boolean isClosingBracket = false;
+
+		StringBuilder sbresults = new StringBuilder();
+
+		for (int i = 0; i < html.length(); i++) {
+			currentSpot = Character.toString(html.charAt(i));
+
+			isClosingBracket = false;
+			// Check and change Level
+			if (currentSpot.equals("<")) {
+				//< can be both open <div> or close </div>
+				checkOpen = true;
+				checkClose = true;
+			} else if (currentSpot.equals("/")) {
+				// / can be both after </ and /> to close, other / should do nothing.
+				// if </ we know we are in closing tag, dont want to read till after >
+				if (checkOpen && checkClose) {
+					level--;
+					checkOpen = false;
+					checkClose = false;
+					inClosingTag = true;
+				} else {
+					checkClose = true;
+				}
+			} else if (currentSpot.equals(">")) {
+				isClosingBracket = true;
+				// if after / close, if </ text > set closed to true;
+				if (checkClose) {
+					level--;
+					checkClose = false;
+				} else if (inClosingTag) {
+					inClosingTag = false;
+				}
+			} else {
+				// if not / after < increase level
+				if (checkOpen) {
+					level++;
+					checkOpen = false;
+				} else if (checkClose) {
+					// If not > after / not closing, probably in link or src or href.
+					checkClose = false;
+				}
+			}
+
+			// Only add on base Level
+			if (level == 0 && !checkOpen && !checkClose && !inClosingTag && !isClosingBracket) {
+				sbresults.append(currentSpot);
+			}
+		}
+
+		System.out.println(sbresults.toString());
+		return sbresults.toString();
+	}
+
 	
 }
