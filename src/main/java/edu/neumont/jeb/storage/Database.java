@@ -54,13 +54,14 @@ public class Database<T extends IStorable> {
 		return loaded;
 	}
 
-	public void insert(T c) { 
-		insertWordIndex(c);
-		writeIndex(wordIndex); 
+	public void insert(T c) {
 		try {
 			file.seek(nextIndex);
 			byte[] bytes = c.serialize().getBytes();
 			file.write(bytes);
+
+			insertWordIndex(c);
+			writeIndex(wordIndex);
 
 			nextIndex += bytes.length;
 
@@ -90,7 +91,8 @@ public class Database<T extends IStorable> {
 			tempIndex = new ArrayList<>();
 			wordIndex.put(c.getKey(), tempIndex); 
 		}
-		tempIndex.add(nextIndex);
+		int index = ((nextIndex - 8) / c.sizeOf());
+		tempIndex.add(index);
 	}
 	
 	public List<T> searchWord(String word) { 
