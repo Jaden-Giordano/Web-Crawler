@@ -2,8 +2,10 @@ package edu.neumont.jeb.webcrawler;
 
 import edu.neumont.jeb.httpconnect.HttpConnection;
 import edu.neumont.jeb.parsing.ParseUtil;
+import edu.neumont.jeb.storage.Database;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,11 @@ public class WebCrawler {
 			}
 			System.out.println(i + ": " + args[i]);
 			crawlSite(args[i], 0);
+		}
+
+		Database<Word> db = new Database<Word>(System.getProperty("user.dir") + File.separator + "data", Word.class);
+		for (Word i : words) {
+			db.insert(i);
 		}
 	}
 
