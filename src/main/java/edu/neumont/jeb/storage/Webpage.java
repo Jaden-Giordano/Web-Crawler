@@ -48,4 +48,9 @@ public class Webpage implements IStorable {
 	public int sizeOf() {
 		return 255 + 255;
 	}
+
+	@Override
+	public String getKey() {
+		return null;
+	}
 }
