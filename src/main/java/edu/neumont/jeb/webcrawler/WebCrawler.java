@@ -3,11 +3,20 @@ package edu.neumont.jeb.webcrawler;
 import edu.neumont.jeb.httpconnect.HttpConnection;
 import edu.neumont.jeb.regex.RegexUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WebCrawler {
 
 	public static void main(String[] args) {
 		WebCrawler w = new WebCrawler();
 		w.run(args);
+	}
+
+	List<String> readURLs;
+
+	private WebCrawler() {
+		this.readURLs = new ArrayList<>();
 	}
 
 	private void run(String[] args) {
@@ -20,8 +29,14 @@ public class WebCrawler {
 			crawlSite(args[i]);
 		}
 	}
+
+	private boolean alreadyRead(String url) {
+		return readURLs.contains(url);
+	}
 	
-	private void crawlSite(String url) {
+	private void crawlSite(String url, int depth) {
+		if (depth >= 2) return;
+
 		String source = HttpConnection.getInstance().getSource(url);
 		if (source == null) {
 			return;
@@ -34,6 +49,12 @@ public class WebCrawler {
 		String body = r.getHTMLTagContents(source, "body"); 
 		
 		String[] links = r.getHTMLLinkURL(body, false, false);
+
+		for (String i : links) {
+			if (!alreadyRead(i)) {
+				crawlSite(i, depth++);
+			}
+		}
 	}
 	
 	private void removeWords(String[] content) {
