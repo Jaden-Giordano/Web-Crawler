@@ -42,6 +42,10 @@ public class Word implements IStorable {
 		this.occurances = occurances;
 	}
 
+	public void pushOccurances() {
+		this.setOccurances(this.getOccurances() + 1);
+	}
+
 	@Override
 	public String serialize() {
 		return String.format("%255s%255s%10s", this.getUrl(), this.getWord(), this.getOccurances());
