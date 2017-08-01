@@ -4,6 +4,7 @@ import edu.neumont.jeb.httpconnect.HttpConnection;
 import edu.neumont.jeb.parsing.ParseUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WebCrawler {
@@ -68,7 +69,34 @@ public class WebCrawler {
 		// 2. Remove nested tags and their data.
 		// 3. Remove conjunctions from content.
 		// 4. Add word to word list.
-		// 5. If there were nested tags; go to step one for that tag..
+		// 5. If there were nested tags; go to step one for that tag.
+
+		String[] divContents = r.getTagContents(body, "div");
+		String[] pContents = r.getTagContents(body, "p");
+		String[] spanContents = r.getTagContents(body, "span");
+		String[] liContents = r.getTagContents(body, "li");
+		String[] labelContents = r.getTagContents(body, "label");
+		String[] aContents = r.getTagContents(body, "a");
+		String[] tdContents = r.getTagContents(body, "td");
+		String[] thContents = r.getTagContents(body, "th");
+		String[] fontContents = r.getTagContents(body, "font");
+		String[] alts = r.getAltText(body);
+		String[] selectContents = r.getTagContents(body, "select");
+		List<String> optionsList = new ArrayList<>();
+		for (String i : selectContents) {
+			optionsList.addAll(Arrays.asList(r.getTagContents(i, "option")));
+		}
+		String[] optionContents = optionsList.toArray(new String[optionsList.size()]);
+
+		for (String i : divContents) {
+			String content = i;
+			if (isConjunction(i)) continue;
+
+			String[] words = content.split(" ");
+			for (String j : words) {
+				addWord(url, j);
+			}
+		}
 		
 		String[] links = r.getHTMLLinkURL(body, false, false);
 
@@ -79,7 +107,7 @@ public class WebCrawler {
 		}
 	}
 	
-	private void removeWords(String[] content) {
+	private boolean isConjunction(String word) {
 		String[] conjuctions = {" and ", " it ", " but ", " or ", " though "
 				, " although ", " while ", " if ", " only ", " unless ", " until "
 				, " that ", " than ", " in ", " whether ", " as ", " whereas " 
@@ -89,12 +117,11 @@ public class WebCrawler {
 				, " nonetheless ", " conversely ", " instead ", " otherwise ", " rahter "
 				, " accordingly ", " consequently ", " hence ", " meanwhile "
 				, " therefore ", " thus "}; 
-		
-		for (String string : content) {
-			for (String conj : conjuctions) {
-				string.replace(conj, "");
-			}
+
+		for (String i : conjuctions) {
+			if (word.equalsIgnoreCase(i)) return true;
 		}
+		return false;
 	}
 	
 	
