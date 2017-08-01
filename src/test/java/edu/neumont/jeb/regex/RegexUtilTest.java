@@ -99,8 +99,8 @@ public class RegexUtilTest {
 	@Test
 	public  void getAltAttributeText() throws Exception {
 		RegexUtil r = new RegexUtil();
-		String[] expected = new String[] {"/news", "https://servers.com", "http://roster.com"};
-		assertArrayEquals(expected, r.getAltText("<img title=\"Neumont University's top 10 advantages.\" src=\"cmsimages/Home_Top10x.png\" alt=\"Neumont University's top 10 advantages.\" width=\"530\" height=\"375\">"));
+		String[] expected = new String[] {"Neumont University's top 10 advantages.", "This is an image :)"};
+		assertArrayEquals(expected, r.getAltText("<img alt=\"Neumont University's top 10 advantages.\" width=\"530\" height=\"375\"><img alt=\"\" width=\"530\" height=\"375\"><img alt=\"This is an image :)\" width=\"530\" height=\"375\">"));
 	}
 
 	@Test
