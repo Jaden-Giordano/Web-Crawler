@@ -5,23 +5,75 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class RegexUtilTest {
+
 	@Test
-	public void invalidUrl() throws Exception {
+	public void localUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
-		assertFalse(r.isValidUrl("si0lewk9i3l"));
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/news"));
 	}
 
 	@Test
-	public void validUrl() throws Exception {
+	public void localRelativeUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
-		assertTrue(r.isValidUrl("https://google.com"));
+		String expected = null;
+		assertEquals(expected, r.validateUrl("news"));
 	}
 
 	@Test
-	public void httpsToHttp() throws Exception {
+	public void localDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/text.pdf"));
+	}
+
+	@Test
+	public void localRelativeDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("text.pdf"));
+	}
+
+	@Test
+	public void localFolderedDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("/docs/text.pdf"));
+	}
+
+	@Test
+	public void localFolderedRelativeDocumentUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("docs/text.pdf"));
+	}
+
+	@Test
+	public void shortUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = "http://neumont.edu";
+		assertEquals(expected, r.validateUrl("neumont.edu"));
+	}
+
+	@Test
+	public void fullHttpsUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = "http://google.com";
+		assertEquals(expected, r.validateUrl("https://google.com"));
+	}
+
+	@Test
+	public void subdomainUrl() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String expected = "http://mail.google.com";
+		assertEquals(expected, r.validateUrl("mail.google.com"));
+	}
+
+	@Test
+	public void queryUrl() throws Exception {
 		RegexUtil r = new RegexUtil();
 		String expected = "http://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8";
-		assertEquals(expected, r.httpsToHttp("https://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8"));
+		assertEquals(expected, r.validateUrl("https://www.google.com/search?q=puppies&rlz=1C1CHBF_enUS740US740&oq=puppies&aqs=chrome..69i57j0l5.7307j0j7&sourceid=chrome&ie=UTF-8"));
 	}
 
 	@Test
@@ -45,17 +97,38 @@ public class RegexUtilTest {
 	}
 
 	@Test
-	public void validGetHTMLLinkURL() throws Exception {
+	public  void getAltAttributeText() throws Exception {
 		RegexUtil r = new RegexUtil();
-		String[] expected = new String[] {"#hero", "#news", "#servers", "#roster", "#about", "#contact"};
-		assertArrayEquals(expected, r.getHTMLLinkURL("<div id=\"sidecar_nav\"><div class=\"link_container\"><a href=\"#hero\">Home</a> <a href=\"#news\">News</a> <a href=\"#servers\">Servers</a> <a href=\"#roster\">Roster</a> <a href=\"#about\">About Us</a> <a href=\"#contact\">Contact</a></div></div><a href=\"mailto:test@mailinator.net\" title=\"test email address\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false));
+		String[] expected = new String[] {"Neumont University's top 10 advantages.", "This is an image :)"};
+		assertArrayEquals(expected, r.getAltText("<img alt=\"Neumont University's top 10 advantages.\" width=\"530\" height=\"375\"><img alt=\"\" width=\"530\" height=\"375\"><img alt=\"This is an image :)\" width=\"530\" height=\"375\">"));
 	}
 
 	@Test
-	public void validGetHTMLLinkURLWithTelAndMailto() throws Exception {
+	public void validGetHTMLLinkURLNoAnchorsMailtoOrTel() throws Exception {
 		RegexUtil r = new RegexUtil();
-		String[] expected = new String[] {"#hero", "#news", "#servers", "#roster", "#about", "#contact", "mailto:test@mailinator.net", "tel:18886386668"};
-		assertArrayEquals(expected, r.getHTMLLinkURL("<div id=\"sidecar_nav\"><div class=\"link_container\"><a href=\"#hero\">Home</a> <a href=\"#news\">News</a> <a href=\"#servers\">Servers</a> <a href=\"#roster\">Roster</a> <a href=\"#about\">About Us</a> <a href=\"#contact\">Contact</a></div></div><a href=\"mailto:test@mailinator.net\" title=\"test email address\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true));
+		String[] expected = new String[] {"/news", "https://servers.com", "http://roster.com"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false, false));
+	}
+
+	@Test
+	public void validGetHTMLLinkURLWithAnchorsNoMailtoAndTel() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String[] expected = new String[] {"#hero", "/news", "https://servers.com", "http://roster.com"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true, false));
+	}
+
+	@Test
+	public void validGetHTMLLinkURLWithMailtoAndTelNoAnchors() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String[] expected = new String[] {"/news", "https://servers.com", "http://roster.com", "mailto:test@mailinator.net", "tel:18886386668"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", false, true));
+	}
+
+	@Test
+	public void validGetHTMLLinkURLWithAnchorsMailtoAndTel() throws Exception {
+		RegexUtil r = new RegexUtil();
+		String[] expected = new String[] {"#hero", "/news", "https://servers.com", "http://roster.com", "mailto:test@mailinator.net", "tel:18886386668"};
+		assertArrayEquals(expected, r.getHTMLLinkURL("<a href=\"#hero\">Home</a><a href=\"/news\">News</a><a href=\"https://servers.com\">Servers</a><a href=\"http://roster.com\">Roster</a><a href=\"mailto:test@mailinator.net\">test@mailinator.net</a><a href=\"tel:18886386668\">1-888-638-6668</a>", true, true));
 	}
 
 }
