@@ -61,7 +61,14 @@ public class WebCrawler {
 		
 		String title = r.getHTMLTagContents(source, "title"); 
 		
-		String body = r.getHTMLTagContents(source, "body"); 
+		String body = r.getHTMLTagContents(source, "body");
+
+		// Order of steps for parsing html.
+		// 1. Read content of tag
+		// 2. Remove nested tags and their data.
+		// 3. Remove conjunctions from content.
+		// 4. Add word to word list.
+		// 5. If there were nested tags; go to step one for that tag..
 		
 		String[] links = r.getHTMLLinkURL(body, false, false);
 
