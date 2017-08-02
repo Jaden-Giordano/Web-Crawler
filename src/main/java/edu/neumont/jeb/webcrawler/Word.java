@@ -54,8 +54,12 @@ public class Word implements IStorable {
 	@Override
 	public void deserialize(String data) {
 		String url = data.substring(0, 255).trim();
-		String word = data.substring(255, 255 * 2);
-		int occurances = Integer.parseInt(data.substring(255 * 2, 255 * 2 + 10));
+		String word = data.substring(255, 255 * 2).trim();
+		int occurances = Integer.parseInt(data.substring(255 * 2, 255 * 2 + 10).trim());
+
+		this.setUrl(url);
+		this.setWord(word);
+		this.setOccurances(occurances);
 	}
 
 	@Override
@@ -66,5 +70,14 @@ public class Word implements IStorable {
 	@Override
 	public String getKey() {
 		return this.getWord(); 
+	}
+
+	@Override
+	public String toString() {
+		return "Word{" +
+				"url='" + this.getUrl() + '\'' +
+				", word='" + this.getWord() + '\'' +
+				", occurances=" + this.getOccurances() +
+				'}';
 	}
 }

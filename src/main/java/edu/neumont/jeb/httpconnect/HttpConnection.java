@@ -1,6 +1,9 @@
 package edu.neumont.jeb.httpconnect;
 
-import edu.neumont.jeb.regex.RegexUtil;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,29 +33,22 @@ public class HttpConnection {
 	 */
 	public String getSource(String sUrl) {
 		String source = "";
-		URL url;
-		HttpURLConnection con = null;
 
 		try {
-			url = new URL(sUrl);
-			con = (HttpURLConnection) url.openConnection();
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpGet req = new HttpGet(sUrl);
 
-			try (InputStream in = con.getInputStream()) {
-				try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-					StringBuilder lines = new StringBuilder();
-					while (br.ready()) {
-						lines.append(br.readLine()).append("\n");
-					}
-					source = lines.toString();
-					return source;
+			HttpResponse res = client.execute(req);
+
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(res.getEntity().getContent()))) {
+				StringBuilder lines = new StringBuilder();
+				while (br.ready()) {
+					lines.append(br.readLine());
 				}
+				source = lines.toString();
 			}
-		} catch (IOException e) {
-			return source;
-		} finally {
-			if (con != null) {
-				con.disconnect();
-			}
-		}
+		} catch (Exception ignored) { }
+
+		return source;
 	}
 }
