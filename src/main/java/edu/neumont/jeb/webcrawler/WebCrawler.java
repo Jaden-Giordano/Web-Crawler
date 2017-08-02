@@ -34,13 +34,21 @@ public class WebCrawler {
 			}
 			System.out.println(i + ": " + args[i]);
 			readURLs.add(args[i]);
-			crawlSite(args[i], args[i], 0);
+			try {
+				crawlSite(args[i], args[i], 0);
+			} catch (Exception e) {
+				System.out.println("Page could not be parsed. Network interrupted.");
+			}
+
 		}
 
-		Database<Word> db = new Database<Word>(System.getProperty("user.dir") + File.separator + "storage", Word.class);
+		System.out.println("Parse Complete, " + words.size() + " words were found.\nWriting to Disk! This will take a while, please be patient.");
+		Database<Word> db = new Database<>(System.getProperty("user.dir") + File.separator + "storage", Word.class);
 		for (Word i : words) {
 			db.insert(i);
 		}
+		System.out.println("Data Storage Complete. Creating Indexes");
+		db.writeIndexesToFile();
 	}
 
 	private boolean alreadyRead(String url) {
@@ -56,7 +64,7 @@ public class WebCrawler {
 				}
 			}
 		}
-		words.add(new Word(url, word, 1));
+		words.add(new Word(url, word.toLowerCase(), 1));
 	}
 	
 	private void crawlSite(String baseURL, String url, int depth) {

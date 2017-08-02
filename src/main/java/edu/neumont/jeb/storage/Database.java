@@ -35,6 +35,7 @@ public class Database<T extends IStorable> {
 
 			file = new RandomAccessFile(path + File.separator + "data", "rw");
 			if (readOffset) nextIndex = file.readInt();
+			System.out.println(indexOfWordsPath);
 			wordIndex = loadIndex(indexOfWordsPath); 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -61,7 +62,6 @@ public class Database<T extends IStorable> {
 			file.write(bytes);
 
 			insertWordIndex(c);
-			writeIndex(wordIndex);
 
 			nextIndex += bytes.length;
 
@@ -73,10 +73,10 @@ public class Database<T extends IStorable> {
 		}
 	}
 	
-	private void writeIndex(HashMap<String, List<Integer>> index) {
+	public void writeIndexesToFile() {
 		try(FileOutputStream out = new FileOutputStream(indexOfWordsPath)) {
 			try(ObjectOutputStream objOut = new ObjectOutputStream(out)){
-				objOut.writeObject(index);
+				objOut.writeObject(wordIndex);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
