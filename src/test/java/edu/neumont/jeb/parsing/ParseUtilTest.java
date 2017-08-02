@@ -35,6 +35,13 @@ public class ParseUtilTest {
 	}
 
 	@Test
+	public void localRelativePageUrl() throws Exception {
+		ParseUtil r = new ParseUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("test.aspx"));
+	}
+
+	@Test
 	public void localFolderedDocumentUrl() throws Exception {
 		ParseUtil r = new ParseUtil();
 		String expected = null;
