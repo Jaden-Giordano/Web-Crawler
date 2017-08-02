@@ -31,4 +31,4 @@ local.properties
 .project
 
 #Data files
-data/*
+storage/*

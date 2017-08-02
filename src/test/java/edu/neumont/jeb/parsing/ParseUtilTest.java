@@ -31,7 +31,14 @@ public class ParseUtilTest {
 	public void localRelativeDocumentUrl() throws Exception {
 		ParseUtil r = new ParseUtil();
 		String expected = null;
-		assertEquals(expected, r.validateUrl("text.pdf"));
+		assertEquals(expected, r.validateUrl("academics.html"));
+	}
+
+	@Test
+	public void localRelativePageUrl() throws Exception {
+		ParseUtil r = new ParseUtil();
+		String expected = null;
+		assertEquals(expected, r.validateUrl("test.aspx"));
 	}
 
 	@Test

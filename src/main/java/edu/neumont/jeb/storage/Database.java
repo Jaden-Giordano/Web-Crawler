@@ -17,7 +17,7 @@ public class Database<T extends IStorable> {
 	private RandomAccessFile file;
 	private int nextIndex = 8;
 	private HashMap<String, List<Integer>> wordIndex = new HashMap<>(); 
-	private final String indexOfWordsPath = "./src/main/java/edu/neumont/jeb/storage/index.txt"; 
+	private final String indexOfWordsPath = System.getProperty("user.dir") + "storage" + File.separator + "index.txt";
 	
 	private Class<T> ref;
 
