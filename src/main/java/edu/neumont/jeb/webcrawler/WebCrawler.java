@@ -128,7 +128,11 @@ public class WebCrawler {
 			if (!alreadyRead(link)) {
 				System.out.println(link);
 				readURLs.add(link);
-				crawlSite(baseURL, link, depth++);
+				try {
+					crawlSite(baseURL, link, depth++);
+				} catch (Exception e) {
+					System.out.println("Page could not be parsed. Network interrupted.");
+				}
 			}
 		}
 	}
