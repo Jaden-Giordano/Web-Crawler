@@ -36,7 +36,7 @@ public class WebCrawler {
 			crawlSite(args[i], 0);
 		}
 
-		Database<Word> db = new Database<Word>(System.getProperty("user.dir") + File.separator + "data", Word.class);
+		Database<Word> db = new Database<Word>(System.getProperty("user.dir") + File.separator + "storage", Word.class);
 		for (Word i : words) {
 			db.insert(i);
 		}
@@ -65,12 +65,12 @@ public class WebCrawler {
 		if (source == null) {
 			return;
 		}
-		
+
 		ParseUtil r = new ParseUtil();
-		
+
 		String title = r.getHTMLTagContents(source, "title");
-		
-		String body = r.getHTMLTagContents(source, "body");
+
+		String body = r.getTagContents(source, "body")[0];
 
 		// Order of steps for parsing html.
 		// 1. Read content of tag
@@ -79,34 +79,37 @@ public class WebCrawler {
 		// 4. Add word to word list.
 		// 5. If there were nested tags; go to step one for that tag.
 
-		String[] divContents = r.getTagContents(body, "div");
-		String[] pContents = r.getTagContents(body, "p");
-		String[] spanContents = r.getTagContents(body, "span");
-		String[] liContents = r.getTagContents(body, "li");
-		String[] labelContents = r.getTagContents(body, "label");
-		String[] aContents = r.getTagContents(body, "a");
-		String[] tdContents = r.getTagContents(body, "td");
-		String[] thContents = r.getTagContents(body, "th");
-		String[] fontContents = r.getTagContents(body, "font");
-		String[] alts = r.getAltText(body);
+		List<String> arr = new ArrayList<>();
+		arr.addAll(Arrays.asList(r.getTagContents(body, "div")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "p")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "span")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "li")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "label")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "a")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "td")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "th")));
+		arr.addAll(Arrays.asList(r.getTagContents(body, "font")));
+		arr.addAll(Arrays.asList(r.getAltText(body)));
+
 		String[] selectContents = r.getTagContents(body, "select");
+		arr.addAll(Arrays.asList(selectContents));
 		List<String> optionsList = new ArrayList<>();
 		for (String i : selectContents) {
 			optionsList.addAll(Arrays.asList(r.getTagContents(i, "option")));
 		}
-		String[] optionContents = optionsList.toArray(new String[optionsList.size()]);
+		arr.addAll(optionsList);
 
-		for (String i : (String[]) ArrayUtils.addAll(divContents, pContents, spanContents, liContents, labelContents, aContents, tdContents, thContents, fontContents, alts, selectContents, optionContents)) {
-			String content = i;
+		for (String i : arr.toArray(new String[arr.size()])) {
+			String content = getWordsInBase(i);
 			content = replacePunctuation(content);
 
-			String[] words = content.split(" ");
+			String[] words = content.split("\\s+");
 			for (String j : words) {
 				if (isConjunction(i)) continue;
 				addWord(url, j);
 			}
 		}
-		
+
 		String[] links = r.getHTMLLinkURL(body, false, false);
 
 		for (String i : links) {
@@ -134,7 +137,7 @@ public class WebCrawler {
 	}
 	
 	private String replacePunctuation(String word) {
-			return word.replaceAll("([[:punct:]])", "");
+			return word.replaceAll("[^\\w\\s]", "");
 	}
 
 
@@ -194,7 +197,6 @@ public class WebCrawler {
 			}
 		}
 
-		System.out.println(sbresults.toString());
 		return sbresults.toString();
 	}
 

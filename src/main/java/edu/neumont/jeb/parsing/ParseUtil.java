@@ -142,36 +142,38 @@ public class ParseUtil {
 		List<String> contents = new ArrayList<>();
 
 		int start = html.indexOf("<" + tag + ">");
-		while (true) {
-			int next = html.indexOf("</" + tag + ">", start);
+		if (start >= 0) {
 			while (true) {
-				String pContent = html.substring(start, next);
+				int next = html.indexOf("</" + tag + ">", start);
+				while (true) {
+					String pContent = html.substring(start, next);
 
-				int count = 0;
-				int countNextFrom = 1;
-				for (;;count++) {
-					int indexOf = pContent.indexOf("<" + tag + ">", countNextFrom);
-					if (indexOf >= 0) {
-						countNextFrom = indexOf + 1;
-						continue;
+					int count = 0;
+					int countNextFrom = 1;
+					for (; ; count++) {
+						int indexOf = pContent.indexOf("<" + tag + ">", countNextFrom);
+						if (indexOf >= 0) {
+							countNextFrom = indexOf + 1;
+							continue;
+						}
+						break;
 					}
+
+					for (int i = 0; i < count; i++) {
+						next = html.indexOf("</" + tag + ">", next + 1);
+					}
+
+					pContent = html.substring(start, next);
+					pContent = pContent.substring(("<" + tag + ">").length());
+					//pContent = pContent.replace("<" + tag + ">", "");
+
+					contents.add(pContent);
 					break;
 				}
 
-				for (int i = 0; i < count; i++) {
-					next = html.indexOf("</" + tag + ">", next + 1);
-				}
-
-				pContent = html.substring(start, next);
-				pContent = pContent.substring(("<" + tag + ">").length());
-				//pContent = pContent.replace("<" + tag + ">", "");
-
-				contents.add(pContent);
-				break;
+				start = html.indexOf("<" + tag + ">", start + 1);
+				if (start == -1) break;
 			}
-
-			start = html.indexOf("<" + tag + ">", start + 1);
-			if (start == -1) break;
 		}
 
 		return contents.toArray(new String[contents.size()]);
