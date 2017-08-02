@@ -24,7 +24,7 @@ public class ParseUtil {
 			return null;
 		}
 
-		regex = "^(?:http(s)?://)?([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
+		regex = "^(?:http(s)?:\\/\\/)?([\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]+)";
 
 		p = Pattern.compile(regex);
 		m = p.matcher(url);
@@ -141,7 +141,7 @@ public class ParseUtil {
 	public String[] getTagContents(String html, String tag) {
 		List<String> contents = new ArrayList<>();
 
-		int start = html.indexOf("<" + tag + ">");
+		int start = html.indexOf("<" + tag);
 		if (start >= 0) {
 			while (true) {
 				int next = html.indexOf("</" + tag + ">", start);
@@ -151,7 +151,7 @@ public class ParseUtil {
 					int count = 0;
 					int countNextFrom = 1;
 					for (; ; count++) {
-						int indexOf = pContent.indexOf("<" + tag + ">", countNextFrom);
+						int indexOf = pContent.indexOf("<" + tag, countNextFrom);
 						if (indexOf >= 0) {
 							countNextFrom = indexOf + 1;
 							continue;
@@ -164,7 +164,8 @@ public class ParseUtil {
 					}
 
 					pContent = html.substring(start, next);
-					pContent = pContent.substring(("<" + tag + ">").length());
+					int closingIndex = pContent.indexOf(">");
+					pContent = pContent.substring(closingIndex + 1);
 					//pContent = pContent.replace("<" + tag + ">", "");
 
 					contents.add(pContent);
@@ -176,7 +177,6 @@ public class ParseUtil {
 			}
 		}
 
-		System.out.println(contents.toArray(new String[contents.size()])[0]);
 		return contents.toArray(new String[contents.size()]);
 	}
 

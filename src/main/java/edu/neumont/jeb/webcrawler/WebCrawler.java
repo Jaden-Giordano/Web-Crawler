@@ -33,7 +33,8 @@ public class WebCrawler {
 				throw new IllegalArgumentException("Invalid Website URL");
 			}
 			System.out.println(i + ": " + args[i]);
-			crawlSite(args[i], 0);
+			readURLs.add(args[i]);
+			crawlSite(args[i], args[i], 0);
 		}
 
 		Database<Word> db = new Database<Word>(System.getProperty("user.dir") + File.separator + "storage", Word.class);
@@ -58,7 +59,7 @@ public class WebCrawler {
 		words.add(new Word(url, word, 1));
 	}
 	
-	private void crawlSite(String url, int depth) {
+	private void crawlSite(String baseURL, String url, int depth) {
 		if (depth >= 2) return;
 
 		String source = HttpConnection.getInstance().getSource(url);
@@ -113,8 +114,21 @@ public class WebCrawler {
 		String[] links = r.getHTMLLinkURL(body, false, false);
 
 		for (String i : links) {
-			if (!alreadyRead(i)) {
-				crawlSite(i, depth++);
+			String link = i;
+			if (r.validateUrl(link) == null) {
+				link = baseURL + "/" + link;
+			}
+			while (true) {
+				if (link.charAt(link.length() - 1) == '/') {
+					link = link.substring(0, link.length() - 1);
+					continue;
+				}
+				break;
+			}
+			if (!alreadyRead(link)) {
+				System.out.println(link);
+				readURLs.add(link);
+				crawlSite(baseURL, link, depth++);
 			}
 		}
 	}
